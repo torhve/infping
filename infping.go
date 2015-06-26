@@ -100,7 +100,7 @@ func writePoints(config *toml.TomlTree, con *client.Client, host string, sent st
         }
     }
     pts[0] = client.Point{
-        Name: "ping",
+        Measurement: "ping",
         Tags: map[string]string{
             "host": host,
         },
