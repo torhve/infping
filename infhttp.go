@@ -34,17 +34,19 @@ func readPoints(config *toml.TomlTree, con *client.Client) {
     for {
         for _, v := range urls {
             url, _ := v.(string)
-            start := time.Now()
-            response, err := http.Get(url)
-            perr(err)
-            defer response.Body.Close()
-            contents, err := ioutil.ReadAll(response.Body)
-            perr(err)
-            elapsed := time.Since(start).Seconds()
-            code := response.StatusCode
-            bytes := len(contents)
-            log.Printf("Url:%s, code: %s, bytes: %s, elapsed: %s", url, code, bytes, elapsed)
-            writePoints(config, con, url, code, bytes, elapsed)
+            go func(url string) {
+                start := time.Now()
+                response, err := http.Get(url)
+                perr(err)
+                contents, err := ioutil.ReadAll(response.Body)
+                defer response.Body.Close()
+                perr(err)
+                elapsed := time.Since(start).Seconds()
+                code := response.StatusCode
+                bytes := len(contents)
+                log.Printf("Url:%s, code: %s, bytes: %s, elapsed: %s", url, code, bytes, elapsed)
+                writePoints(config, con, url, code, bytes, elapsed)
+            }(url)
         }
         time.Sleep(time.Second * 30)
     }
@@ -75,9 +77,7 @@ func writePoints(config *toml.TomlTree, con *client.Client, url string, code int
         RetentionPolicy: "default",
     }
     _, err := con.Write(bps)
-    if err != nil {
-        log.Fatal(err)
-    }
+    perr(err)
 }
 
 func main() {
