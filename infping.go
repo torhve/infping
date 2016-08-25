@@ -4,7 +4,7 @@
 package main
 
 import (
-    "github.com/influxdb/influxdb/client"
+    "github.com/influxdata/influxdb/client"
     "github.com/pelletier/go-toml"
     "fmt"
     "log"
@@ -121,7 +121,7 @@ func writePoints(config *toml.TomlTree, con *client.Client, host string, sent st
 }
 
 func main() {
-    config, err := toml.LoadFile("config.toml")
+    config, err := toml.LoadFile("/etc/config.toml")
     if err != nil {
         fmt.Println("Error:", err.Error())
         os.Exit(1)
