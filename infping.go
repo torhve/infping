@@ -106,7 +106,7 @@ func writePoints(config *toml.TomlTree, con *client.Client, host string, sent st
         },
         Fields: fields,
         Time: time.Now(),
-        Precision: "s",
+        Precision: "",
     }
 
     bps := client.BatchPoints{
