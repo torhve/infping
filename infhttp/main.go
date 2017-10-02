@@ -62,7 +62,7 @@ func writePoints(config *toml.Tree, con *client.Client, url string, code int, by
         "elapsed": elapsed,
     }
     pts[0] = client.Point{
-        Measurement: "http",
+        Measurement: config.Get("influxdb.measurement").(string),
         Tags: map[string]string{
             "url": url,
         },
@@ -87,13 +87,11 @@ func main() {
         os.Exit(1)
     }
 
-    host := config.Get("influxdb.host").(string)
-    port := config.Get("influxdb.port").(string)
-    //measurement := config.Get("influxdb.measurement").(string)
-    username := config.Get("influxdb.user").(string)
-    password := config.Get("influxdb.pass").(string)
+    influx_url := config.Get("influxdb.url").(string)
+    username   := config.Get("influxdb.user").(string)
+    password   := config.Get("influxdb.pass").(string)
 
-    u, err := url.Parse(fmt.Sprintf("http://%s:%s", host, port))
+    u, err := url.Parse(influx_url)
     if err != nil {
         log.Fatal(err)
     }
