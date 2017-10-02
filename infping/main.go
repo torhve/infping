@@ -69,7 +69,7 @@ func readPoints(config *toml.Tree, con *client.Client) {
                 td := strings.FieldsFunc(times, slashSplitter)
                 min, avg, max = td[0], td[1], td[2]
             }
-            //log.Printf("Host:%s, loss: %s, min: %s, avg: %s, max: %s", host, lossp, min, avg, max)
+            log.Printf("Host:%s, loss: %s, min: %s, avg: %s, max: %s", host, lossp, min, avg, max)
             writePoints(config, con, host, sent, recv, lossp, min, avg, max)
         }
     }
