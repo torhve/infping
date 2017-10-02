@@ -34,7 +34,7 @@ func slashSplitter(c rune) bool {
     return c == '/'
 }
 
-func readPoints(config *toml.TomlTree, con *client.Client) {
+func readPoints(config *toml.Tree, con *client.Client) {
     args := []string{"-B 1", "-D", "-r0", "-O 0", "-Q 10", "-p 1000", "-l"}
     hosts := config.Get("hosts.hosts").([]interface{})
     for _, v := range hosts {
@@ -79,7 +79,7 @@ func readPoints(config *toml.TomlTree, con *client.Client) {
     log.Printf("stdout:%s", line)
 }
 
-func writePoints(config *toml.TomlTree, con *client.Client, host string, sent string, recv string, lossp string, min string, avg string, max string) {
+func writePoints(config *toml.Tree, con *client.Client, host string, sent string, recv string, lossp string, min string, avg string, max string) {
     db := config.Get("influxdb.db").(string)
     loss, _ := strconv.Atoi(lossp)
     pts := make([]client.Point, 1)
@@ -112,7 +112,7 @@ func writePoints(config *toml.TomlTree, con *client.Client, host string, sent st
     bps := client.BatchPoints{
         Points:          pts,
         Database:        db,
-        RetentionPolicy: "default",
+        RetentionPolicy: "autogen",
     }
     _, err := con.Write(bps)
     if err != nil {
